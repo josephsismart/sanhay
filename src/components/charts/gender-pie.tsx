@@ -58,7 +58,7 @@ export function GenderPie() {
             ))}
           </Pie>
           <Tooltip
-            formatter={(value: number, name: string) => [value.toLocaleString(), name]}
+            formatter={(value, name) => [Number(value).toLocaleString(), name]}
             contentStyle={{ borderRadius: "8px", border: "1px solid #e5e7eb", fontSize: "13px" }}
           />
         </PieChart>

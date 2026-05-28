@@ -62,8 +62,8 @@ export function EnrollmentByGrade() {
         <XAxis dataKey="name" fontSize={11} tickLine={false} />
         <YAxis fontSize={11} tickFormatter={(v) => v.toLocaleString()} />
         <Tooltip
-          formatter={(value: number, name: string) => [
-            value.toLocaleString(),
+          formatter={(value, name) => [
+            Number(value).toLocaleString(),
             name === "male" ? "Male" : "Female",
           ]}
           contentStyle={{ borderRadius: "8px", border: "1px solid #e5e7eb", fontSize: "13px" }}

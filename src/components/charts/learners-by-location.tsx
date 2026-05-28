@@ -77,8 +77,8 @@ export function LearnersByLocation() {
         />
         <YAxis fontSize={12} tickFormatter={(v) => v.toLocaleString()} />
         <Tooltip
-          formatter={(value: number, name: string) => [
-            value.toLocaleString(),
+          formatter={(value, name) => [
+            Number(value).toLocaleString(),
             name === "male" ? "Male" : "Female",
           ]}
           labelFormatter={(_, payload) => {

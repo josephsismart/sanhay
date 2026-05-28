@@ -82,7 +82,7 @@ export function PopulationPyramid() {
           tickLine={false}
         />
         <Tooltip
-          formatter={(value: number, name: string) => [
+          formatter={(value, name) => [
             Math.abs(value).toLocaleString(),
             name === "male" ? "Male" : "Female",
           ]}

@@ -224,11 +224,6 @@ export default function LoginPage() {
           </div>
         </CardContent>
       </Card>
-
-      {/* footer text */}
-      <p className="mt-6 text-xs text-muted-foreground text-center">
-        &copy; {new Date().getFullYear()} Agusan National High School &middot; Powered by Sanhay
-      </p>
     </div>
   );
 }
