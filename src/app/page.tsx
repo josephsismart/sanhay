@@ -21,42 +21,9 @@ const navLinks = [
 ];
 
 const banners = [
-  {
-    id: 1,
-    tag: "Enrollment Open",
-    title: "SY 2026–2027 Enrollment is Now Open!",
-    desc: "Incoming Grade 7 and transferee students may now enroll. Visit the Registrar's Office or use the student portal.",
-    bg: "from-indigo-900 via-blue-900 to-blue-950",
-    accent: "bg-indigo-500/30",
-    badge: "bg-white/20 text-white",
-  },
-  {
-    id: 2,
-    tag: "Achievement",
-    title: "ANHS Wins Regional Science Fair!",
-    desc: "Our STEM students clinched 1st place at the Regional Science and Technology Fair. Representing the region at nationals in June!",
-    bg: "from-amber-900 via-orange-900 to-amber-950",
-    accent: "bg-amber-500/20",
-    badge: "bg-white/20 text-white",
-  },
-  {
-    id: 3,
-    tag: "Upcoming Event",
-    title: "Graduation Ceremony — Class of 2026",
-    desc: "The Senior High School graduation ceremony will be held on June 5, 2026 at the school gymnasium. All graduates are required to attend.",
-    bg: "from-violet-900 via-purple-900 to-violet-950",
-    accent: "bg-violet-500/20",
-    badge: "bg-white/20 text-white",
-  },
-  {
-    id: 4,
-    tag: "New",
-    title: "ANHS School Portal is Now Live!",
-    desc: "Access grades, attendance, and announcements anytime through the new ANHS School Information Portal. Login now!",
-    bg: "from-emerald-900 via-teal-900 to-emerald-950",
-    accent: "bg-emerald-500/20",
-    badge: "bg-white/20 text-white",
-  },
+  { id: 1, img: "/b0_2024.jpg" },
+  { id: 2, img: "/b1_2024.jpg" },
+  { id: 3, img: "/b2_2024.jpg" },
 ];
 
 const announcements = [
@@ -224,15 +191,15 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 60" fill="none" className="w-full h-8 sm:h-12">
-            <path d="M0,40 C360,80 720,0 1440,40 L1440,60 L0,60 Z" className="fill-white" />
+        <div className="absolute bottom-0 left-0 right-0 overflow-hidden leading-none">
+          <svg viewBox="0 0 1440 54" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full block" style={{display:"block",marginBottom:"-2px"}}>
+            <path d="M0,32 C240,56 480,8 720,32 C960,56 1200,8 1440,32 L1440,54 L0,54 Z" fill="white" />
           </svg>
         </div>
       </section>
 
       {/* ── Sliding Banner / Carousel ───────────────────────────── */}
-      <section className="bg-white pt-16 sm:pt-20 pb-8 sm:pb-12">
+      <section className="bg-white -mt-1 pt-6 sm:pt-8 pb-8 sm:pb-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div
             className="relative rounded-2xl overflow-hidden shadow-xl h-52 sm:h-64"
@@ -243,17 +210,10 @@ export default function Home() {
             {banners.map((b, i) => (
               <div
                 key={b.id}
-                className={`absolute inset-0 bg-gradient-to-br ${b.bg} transition-opacity duration-700 ${i === currentBanner ? "opacity-100 z-10" : "opacity-0 z-0"}`}
+                className={`absolute inset-0 transition-opacity duration-700 ${i === currentBanner ? "opacity-100 z-10" : "opacity-0 z-0"}`}
               >
-                {/* decorative blob */}
-                <div className={`absolute -top-10 -right-10 h-48 w-48 rounded-full ${b.accent} blur-2xl`} />
-                <div className="relative z-10 flex flex-col justify-center h-full px-8 sm:px-12 max-w-2xl">
-                  <span className={`inline-block text-[10px] font-bold px-3 py-1 rounded-full border border-white/30 ${b.badge} w-fit mb-3`}>
-                    {b.tag}
-                  </span>
-                  <h3 className="text-lg sm:text-2xl font-extrabold text-white leading-tight">{b.title}</h3>
-                  <p className="mt-2 text-sm text-white/75 leading-relaxed line-clamp-2">{b.desc}</p>
-                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={b.img} alt="" className="w-full h-full object-cover" />
               </div>
             ))}
 
