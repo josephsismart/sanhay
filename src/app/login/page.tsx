@@ -56,9 +56,15 @@ export default function LoginPage() {
           const session = await sessionRes.json();
           const role = session?.user?.role || 6;
           const roleRoutes: Record<number, string> = {
-            1: "/admin", 2: "/admin", 3: "/department",
-            4: "/school", 5: "/school", 6: "/school",
-            7: "/teacher", 8: "/student", 9: "/guard",
+            1: "/admin",    // Super Admin
+            2: "/admin",    // Admin
+            3: "/admin",    // Department Head
+            4: "/admin",    // School Head
+            5: "/admin",    // School Planning
+            6: "/admin",    // School Admin
+            7: "/teacher",  // Teacher
+            8: "/student",  // Student
+            9: "/guard",    // Security Guard
           };
           router.push(roleRoutes[role] || "/admin");
         }
