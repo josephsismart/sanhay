@@ -83,7 +83,7 @@ export function PopulationPyramid() {
         />
         <Tooltip
           formatter={(value, name) => [
-            Math.abs(value).toLocaleString(),
+            Math.abs(Number(value)).toLocaleString(),
             name === "male" ? "Male" : "Female",
           ]}
           labelFormatter={(label) => `Age: ${label}`}
