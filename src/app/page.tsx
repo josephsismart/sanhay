@@ -232,7 +232,7 @@ export default function Home() {
       </section>
 
       {/* ── Sliding Banner / Carousel ───────────────────────────── */}
-      <section className="bg-white -mt-1 pt-8 sm:pt-12 pb-8 sm:pb-12">
+      <section className="bg-white pt-16 sm:pt-20 pb-8 sm:pb-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div
             className="relative rounded-2xl overflow-hidden shadow-xl h-52 sm:h-64"

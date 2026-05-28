@@ -1,0 +1,23 @@
+{
+  "name": "Sanhay | Agusan National High School",
+  "short_name": "Sanhay ANHS",
+  "description": "Official School Information System of Agusan National High School, Butuan City",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "/anhs-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/anhs-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

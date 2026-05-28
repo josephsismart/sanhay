@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import {
   Eye,
   EyeOff,
@@ -205,20 +204,6 @@ function LoginForm() {
             </Link>
           </p>
 
-          {/* Demo accounts */}
-          <div className="mt-5 rounded-2xl bg-indigo-50/80 border border-indigo-100 p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge className="rounded-full bg-indigo-600 text-white text-[10px] px-2 py-0.5 font-semibold">
-                DEMO
-              </Badge>
-              <span className="text-xs text-indigo-700/70 font-medium">Test accounts</span>
-            </div>
-            <div className="space-y-1 text-xs text-indigo-600/70 font-mono leading-relaxed">
-              <p>admin@demo.com / demo123</p>
-              <p>teacher@demo.com / demo123</p>
-              <p>student@demo.com / demo123</p>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>

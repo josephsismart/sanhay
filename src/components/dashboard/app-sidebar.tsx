@@ -33,6 +33,7 @@ const NAV_ITEMS: Record<number, Array<{ label: string; href: string; icon: any }
     { label: "Personnel", href: "/admin/personnel", icon: Users },
     { label: "Learners", href: "/admin/learners", icon: GraduationCap },
     { label: "Sections", href: "/admin/sections", icon: CalendarDays },
+    { label: "ID System", href: "/admin/id", icon: IdCard },
     { label: "Reports", href: "/admin/reports", icon: BarChart3 },
   ],
   3: [
@@ -46,6 +47,7 @@ const NAV_ITEMS: Record<number, Array<{ label: string; href: string; icon: any }
     { label: "Learners", href: "/school/learners", icon: GraduationCap },
     { label: "Sections", href: "/school/sections", icon: CalendarDays },
     { label: "Departments", href: "/school/departments", icon: Building2 },
+    { label: "ID System", href: "/admin/id", icon: IdCard },
     { label: "Reports", href: "/school/reports", icon: BarChart3 },
     { label: "Settings", href: "/school/settings", icon: Settings },
   ],
@@ -55,6 +57,7 @@ const NAV_ITEMS: Record<number, Array<{ label: string; href: string; icon: any }
     { label: "Learners", href: "/school/learners", icon: GraduationCap },
     { label: "Sections", href: "/school/sections", icon: CalendarDays },
     { label: "Departments", href: "/school/departments", icon: Building2 },
+    { label: "ID System", href: "/admin/id", icon: IdCard },
     { label: "Reports", href: "/school/reports", icon: BarChart3 },
   ],
   7: [
