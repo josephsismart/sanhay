@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -19,7 +19,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-export default function LoginPage() {
+function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -47,24 +47,22 @@ export default function LoginPage() {
         setError("Invalid username or password. Please try again.");
         setIsLoading(false);
       } else {
-        // Redirect based on role if no callbackUrl
         if (callbackUrl) {
           router.push(callbackUrl);
         } else {
-          // Fetch session to get role
           const sessionRes = await fetch("/api/auth/session");
           const session = await sessionRes.json();
           const role = session?.user?.role || 6;
           const roleRoutes: Record<number, string> = {
-            1: "/admin",    // Super Admin
-            2: "/admin",    // Admin
-            3: "/admin",    // Department Head
-            4: "/admin",    // School Head
-            5: "/admin",    // School Planning
-            6: "/admin",    // School Admin
-            7: "/teacher",  // Teacher
-            8: "/student",  // Student
-            9: "/guard",    // Security Guard
+            1: "/admin",
+            2: "/admin",
+            3: "/admin",
+            4: "/admin",
+            5: "/admin",
+            6: "/admin",
+            7: "/teacher",
+            8: "/student",
+            9: "/guard",
           };
           router.push(roleRoutes[role] || "/admin");
         }
@@ -95,7 +93,6 @@ export default function LoginPage() {
       {/* login card */}
       <Card className="w-full max-w-[400px] shadow-xl border bg-white/90 backdrop-blur-sm">
         <CardHeader className="text-center pt-8 pb-2">
-          {/* school logo */}
           <div className="flex justify-center mb-4">
             <Image
               src="/anhs-logo.png"
@@ -225,5 +222,17 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="animate-spin h-8 w-8 border-2 border-indigo-600 border-t-transparent rounded-full" />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }
