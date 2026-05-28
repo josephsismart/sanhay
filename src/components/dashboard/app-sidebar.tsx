@@ -146,7 +146,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
             <SidebarMenuButton asChild className="text-red-600 hover:text-red-700 hover:bg-red-50">
               <Link href="/api/auth/signout">
                 <LogOut className="h-4 w-4" />
-                <span>Sign out</span>
+                       <span>Sign out</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

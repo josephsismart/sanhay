@@ -7,6 +7,8 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const BASE_URL = "https://sanhay.vercel.app";
+
 export const metadata: Metadata = {
   title: {
     default: "Sanhay | Agusan National High School Information System",
@@ -24,30 +26,30 @@ export const metadata: Metadata = {
     "Region XIII",
   ],
   authors: [{ name: "Joseph O. Sismar", url: "mailto:josephsismart@gmail.com" }],
-  metadataBase: new URL("https://sanhay.vercel.app"),
+  metadataBase: new URL(BASE_URL),
   openGraph: {
     type: "website",
     locale: "en_PH",
-    url: "https://sanhay.vercel.app",
+    url: BASE_URL,
     siteName: "Sanhay | ANHS",
     title: "Sanhay | Agusan National High School Information System",
     description:
       "Official School Information System of Agusan National High School, Butuan City. Manage learners, personnel, grades, and school operations.",
     images: [
       {
-        url: "/anhs-logo.png",
-        width: 512,
-        height: 512,
-        alt: "Agusan National High School Logo",
+        url: `${BASE_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Sanhay - Agusan National High School Information System",
       },
     ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Sanhay | Agusan National High School",
     description:
       "Official School Information System of Agusan National High School, Butuan City.",
-    images: ["/anhs-logo.png"],
+    images: [`${BASE_URL}/og-image.png`],
   },
   icons: {
     icon: [{ url: "/anhs-logo.png", type: "image/png" }],
