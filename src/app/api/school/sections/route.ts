@@ -61,3 +61,69 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Failed to fetch sections" }, { status: 500 });
   }
 }
+
+/**
+ * POST /api/school/sections
+ * Create a new section in the currently active school year.
+ * Body: { sectionName, gradeLevelId, scheduleId?, roomId?, programStrandId?, program? }
+ */
+export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role > 6) {
+    return NextResponse.json({ error: "Forbidden — admins only" }, { status: 403 });
+  }
+
+  try {
+    const body = await req.json();
+    const sectionName = (body.sectionName ?? "").toString().trim();
+    const gradeLevelId = Number(body.gradeLevelId);
+    const scheduleId = body.scheduleId ? Number(body.scheduleId) : null;
+    const roomId = body.roomId ? Number(body.roomId) : null;
+    const programStrandId = body.programStrandId ? Number(body.programStrandId) : null;
+    const program = body.program ? body.program.toString().trim() : null;
+
+    if (!sectionName) return NextResponse.json({ error: "Section name is required" }, { status: 400 });
+    if (!gradeLevelId) return NextResponse.json({ error: "Grade level is required" }, { status: 400 });
+
+    const sy = await getActiveSySchema();
+    const syId = sy.syId;
+
+    // Duplicate check (same name + same grade + same SY)
+    const dup = await prisma.$queryRawUnsafe<any[]>(
+      `SELECT id FROM building_sectioning.tbl_room_section
+       WHERE UPPER(sctn_nm) = UPPER($1)
+         AND grd_lvl_id = $2
+         AND schl_yr_id = $3
+       LIMIT 1`,
+      sectionName,
+      gradeLevelId,
+      syId
+    );
+    if (dup.length) {
+      return NextResponse.json({ error: "A section with this name already exists for this grade and school year" }, { status: 409 });
+    }
+
+    // Pick the first room if none specified (DB requires room_id non-null? actually NULL not allowed based on sample)
+    // Sample row shows room_id is bigint NOT NULL — fall back to room 1 if not supplied
+    const finalRoomId = roomId ?? 1;
+
+    const inserted = await prisma.$queryRawUnsafe<any[]>(
+      `INSERT INTO building_sectioning.tbl_room_section
+        (room_id, grd_lvl_id, schl_yr_id, sctn_nm, schedule_id, is_active, program, program_strand_id)
+       VALUES ($1, $2, $3, $4, $5, true, $6, $7)
+       RETURNING id`,
+      finalRoomId,
+      gradeLevelId,
+      syId,
+      sectionName.toUpperCase(),
+      scheduleId,
+      program,
+      programStrandId
+    );
+
+    return NextResponse.json({ success: true, id: Number(inserted[0].id) }, { status: 201 });
+  } catch (err) {
+    console.error("[sections POST]", err);
+    return NextResponse.json({ error: "Failed to create section", detail: String(err) }, { status: 500 });
+  }
+}

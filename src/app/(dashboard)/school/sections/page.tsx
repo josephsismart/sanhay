@@ -1,16 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   CalendarDays, Loader2, Users, BookOpen, ChevronRight,
-  GraduationCap, UserCheck, Search, UserX, UserRound,
+  GraduationCap, UserCheck, Search, UserX, UserRound, Plus, UserPlus,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
+import { AddSectionModal } from "@/components/sections/add-section-modal";
+import { EnrollLearnersModal } from "@/components/sections/enroll-learners-modal";
 
 interface Section {
   id: number; sctn_nm: string; is_active: boolean;
@@ -66,13 +69,31 @@ export default function SectionsPage() {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [teachersLoading, setTeachersLoading] = useState(false);
 
-  useEffect(() => {
+  // Add Section modal
+  const [addOpen, setAddOpen] = useState(false);
+
+  // Enroll Learners modal
+  const [enrollOpen, setEnrollOpen] = useState(false);
+
+  const reloadSections = useCallback(() => {
+    setLoading(true);
     fetch("/api/school/sections")
       .then((r) => r.json())
       .then((d) => setSections(d.data || []))
       .catch(() => setError("Failed to load sections"))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => { reloadSections(); }, [reloadSections]);
+
+  // Reload enrollees inside section modal (called after enrollment)
+  const reloadEnrollees = useCallback(() => {
+    if (!selectedSection) return;
+    setEnrolleesLoading(true);
+    fetch(`/api/school/sections/${selectedSection.id}/enrollees`)
+      .then(r => r.json()).then(d => setEnrollees(d.data || []))
+      .catch(() => {}).finally(() => setEnrolleesLoading(false));
+  }, [selectedSection]);
 
   const openSection = async (s: Section) => {
     setSelectedSection(s);
@@ -172,12 +193,15 @@ export default function SectionsPage() {
         <div className="p-2 bg-blue-100 rounded-xl">
           <CalendarDays className="h-6 w-6 text-blue-600" />
         </div>
-        <div>
+        <div className="flex-1">
           <h1 className="text-2xl font-bold text-gray-900">Sections</h1>
           <p className="text-sm text-muted-foreground">
             {sections.length} sections · {totalLearners.toLocaleString()} learners · {sections[0]?.sy_description || "Current SY"}
           </p>
         </div>
+        <Button onClick={() => setAddOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 shrink-0">
+          <Plus className="h-4 w-4 mr-1" /> Add Section
+        </Button>
       </div>
 
       {!loading && sortedGrades.length > 0 && (
@@ -322,35 +346,46 @@ export default function SectionsPage() {
                   </div>
                 )}
 
-                <div className="flex gap-1 mt-4 bg-gray-100 rounded-lg p-1 w-fit">
-                  <button
-                    onClick={() => setModalTab("learners")}
-                    className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1.5 ${
-                      modalTab === "learners" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
-                    }`}
-                  >
-                    <Users className="h-3.5 w-3.5" />
-                    Learners
-                    {!enrolleesLoading && (
-                      <span className={`text-xs px-1.5 py-0.5 rounded-full ${modalTab === "learners" ? "bg-gray-100 text-gray-600" : "bg-gray-200 text-gray-500"}`}>
-                        {enrollees.length}
-                      </span>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => setModalTab("teachers")}
-                    className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1.5 ${
-                      modalTab === "teachers" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
-                    }`}
-                  >
-                    <BookOpen className="h-3.5 w-3.5" />
-                    Teachers & Subjects
-                    {!teachersLoading && (
-                      <span className={`text-xs px-1.5 py-0.5 rounded-full ${modalTab === "teachers" ? "bg-gray-100 text-gray-600" : "bg-gray-200 text-gray-500"}`}>
-                        {teachers.length}
-                      </span>
-                    )}
-                  </button>
+                <div className="flex items-center justify-between mt-4 gap-2 flex-wrap">
+                  <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
+                    <button
+                      onClick={() => setModalTab("learners")}
+                      className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1.5 ${
+                        modalTab === "learners" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
+                      }`}
+                    >
+                      <Users className="h-3.5 w-3.5" />
+                      Learners
+                      {!enrolleesLoading && (
+                        <span className={`text-xs px-1.5 py-0.5 rounded-full ${modalTab === "learners" ? "bg-gray-100 text-gray-600" : "bg-gray-200 text-gray-500"}`}>
+                          {enrollees.length}
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setModalTab("teachers")}
+                      className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1.5 ${
+                        modalTab === "teachers" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
+                      }`}
+                    >
+                      <BookOpen className="h-3.5 w-3.5" />
+                      Teachers & Subjects
+                      {!teachersLoading && (
+                        <span className={`text-xs px-1.5 py-0.5 rounded-full ${modalTab === "teachers" ? "bg-gray-100 text-gray-600" : "bg-gray-200 text-gray-500"}`}>
+                          {teachers.length}
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                  {modalTab === "learners" && (
+                    <Button
+                      size="sm"
+                      onClick={() => setEnrollOpen(true)}
+                      className="bg-indigo-600 hover:bg-indigo-700 h-8"
+                    >
+                      <UserPlus className="h-3.5 w-3.5 mr-1" /> Enroll Learners
+                    </Button>
+                  )}
                 </div>
 
                 {modalTab === "learners" && (
@@ -517,6 +552,31 @@ export default function SectionsPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Add Section modal */}
+      <AddSectionModal
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        onCreated={() => {
+          setAddOpen(false);
+          reloadSections();
+        }}
+      />
+
+      {/* Enroll Learners modal — only renders when a section is selected */}
+      {selectedSection && (
+        <EnrollLearnersModal
+          open={enrollOpen}
+          onClose={() => setEnrollOpen(false)}
+          sectionId={selectedSection.id}
+          sectionName={selectedSection.sctn_nm}
+          gradeLabel={selectedSection.grade_level}
+          onEnrolled={() => {
+            reloadEnrollees();
+            reloadSections();
+          }}
+        />
+      )}
     </div>
   );
 }

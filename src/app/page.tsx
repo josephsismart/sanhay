@@ -199,41 +199,100 @@ export default function Home() {
       </section>
 
       {/* ── Sliding Banner / Carousel ───────────────────────────── */}
-      <section className="bg-white -mt-1 pt-6 sm:pt-8 pb-8 sm:pb-12">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <section className="bg-white -mt-1 pt-6 sm:pt-10 pb-10 sm:pb-16">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6">
           <div
-            className="relative rounded-2xl overflow-hidden shadow-xl h-52 sm:h-64"
+            className="group relative rounded-3xl overflow-hidden shadow-2xl shadow-indigo-900/20 ring-1 ring-black/5
+                       h-[320px] sm:h-[480px] md:h-[560px] lg:h-[640px]
+                       bg-gradient-to-br from-slate-900 to-indigo-950"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
           >
-            {/* Slides */}
-            {banners.map((b, i) => (
-              <div
-                key={b.id}
-                className={`absolute inset-0 transition-opacity duration-700 ${i === currentBanner ? "opacity-100 z-10" : "opacity-0 z-0"}`}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={b.img} alt="" className="w-full h-full object-cover" />
-              </div>
-            ))}
+            {/* Slides — slow Ken Burns zoom on the active slide */}
+            {banners.map((b, i) => {
+              const isActive = i === currentBanner;
+              return (
+                <div
+                  key={b.id}
+                  className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${isActive ? "opacity-100 z-10" : "opacity-0 z-0"}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={b.img}
+                    alt=""
+                    className={`w-full h-full object-cover ${isActive ? "animate-kenburns" : ""}`}
+                  />
+                  {/* Subtle bottom gradient for legibility of dots */}
+                  <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+                </div>
+              );
+            })}
 
-            {/* Prev / Next */}
-            <button onClick={prev} className="absolute left-3 top-1/2 -translate-y-1/2 z-20 h-8 w-8 flex items-center justify-center rounded-full bg-black/30 hover:bg-black/50 text-white transition-colors">
-              <ChevronLeft className="h-4 w-4" />
+            {/* Prev / Next — bigger, more visible, smooth hover */}
+            <button
+              onClick={prev}
+              aria-label="Previous slide"
+              className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20
+                         h-11 w-11 sm:h-14 sm:w-14 flex items-center justify-center
+                         rounded-full bg-white/10 backdrop-blur-md
+                         border border-white/20
+                         text-white shadow-lg
+                         opacity-0 group-hover:opacity-100 sm:opacity-100
+                         hover:bg-white/25 hover:scale-110 active:scale-95
+                         transition-all duration-300"
+            >
+              <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
-            <button onClick={next} className="absolute right-3 top-1/2 -translate-y-1/2 z-20 h-8 w-8 flex items-center justify-center rounded-full bg-black/30 hover:bg-black/50 text-white transition-colors">
-              <ChevronRight className="h-4 w-4" />
+            <button
+              onClick={next}
+              aria-label="Next slide"
+              className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20
+                         h-11 w-11 sm:h-14 sm:w-14 flex items-center justify-center
+                         rounded-full bg-white/10 backdrop-blur-md
+                         border border-white/20
+                         text-white shadow-lg
+                         opacity-0 group-hover:opacity-100 sm:opacity-100
+                         hover:bg-white/25 hover:scale-110 active:scale-95
+                         transition-all duration-300"
+            >
+              <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
+
+            {/* Slide counter chip — top right */}
+            <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20
+                            text-[11px] sm:text-xs font-semibold tracking-wider text-white
+                            bg-black/30 backdrop-blur-md border border-white/20
+                            px-3 py-1.5 rounded-full">
+              {String(currentBanner + 1).padStart(2, "0")}
+              <span className="opacity-50 mx-1">/</span>
+              {String(banners.length).padStart(2, "0")}
+            </div>
 
             {/* Dots */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+            <div className="absolute bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-20 flex gap-2.5">
               {banners.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => goTo(i)}
-                  className={`rounded-full transition-all duration-300 ${i === currentBanner ? "w-6 h-2 bg-white" : "w-2 h-2 bg-white/40 hover:bg-white/70"}`}
+                  aria-label={`Go to slide ${i + 1}`}
+                  className={`rounded-full transition-all duration-500 ${
+                    i === currentBanner
+                      ? "w-10 h-2.5 bg-white shadow-lg shadow-white/30"
+                      : "w-2.5 h-2.5 bg-white/40 hover:bg-white/70"
+                  }`}
                 />
               ))}
+            </div>
+
+            {/* Progress bar — fills while paused timer runs */}
+            <div className="absolute bottom-0 left-0 right-0 h-1 z-20 bg-white/10">
+              <div
+                key={`${currentBanner}-${isPaused ? "paused" : "playing"}`}
+                className={`h-full bg-gradient-to-r from-indigo-400 via-blue-400 to-cyan-400 ${
+                  isPaused ? "" : "animate-progress"
+                }`}
+                style={{ animationDuration: "4.5s" }}
+              />
             </div>
           </div>
         </div>
